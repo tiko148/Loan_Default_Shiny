@@ -7,22 +7,147 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+Downloading libraries that will be used for this application:
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+library(tidyverse) #for data manipulation and wrangling
+library(visdat) # for graphing na values and similar tasks relating to na values
+library(mice) # this library has tools to impute missing data 
+library(VIM)
+library(GGally) #for graphing and calculations.
+library(ltm) # Used for finding correlation between dichotomous categorical variable and continuous variable using function (biserial.cor())
+library(caret) # for testing and predictions
+library(mltools) #provides machine learning tools
 ```
 
-## Including Plots
+Loading the Dataset:
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+loan <- read_csv("~/Desktop/LoanDefault_Shiny/Loan_Default.csv")
+loan <- data.frame(loan, stringsAsFactors = F)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Exploring the dataset and conducting eda:
+
+```{r}
+str(loan) #148,670 obs. of  34 variables:
+View(loan)
+vis_dat(loan, warn_large_data = F) #graphing out where we can expect the most NA values
+
+na_count <-sapply(loan, function(y) sum(length(which(is.na(y)))))
+na_count <- data.frame(na_count)
+na_count #---> Dataframe format to show how many NA values in each column/variable.
+
+
+na_count %>% 
+  filter(na_count>0) %>% 
+  arrange(desc(na_count, na_count))->na_values_counter
+
+
+na_values_counter["% of All Data"] = (na_values_counter["na_count"]/nrow(loan))*100
+na_values_counter
+
+
+# As we can can see there are several columns that contain significant amount
+#of na values.  Columns ('Upfront_charges', Interest_rate_spread, rate_of_interest,
+#dtir1) have na values that are more than 15% of the data. These columns will 
+#most likely be dropped.
+
+#Columns containing less than 15% na values, will most likely be imputed or dropped as 
+#we conduct more analysis
+```
+Below are the columns that we currently have for our dataset.
+Our data is currently divided into 'character' and 'num' types.
+Due to the nature of some of these columns, we will convert them into Factors
+```{r}
+col_names <- data.frame(colnames(loan))
+
+col_names <- rowid_to_column(col_names, "index")
+
+
+data_types <- sapply(loan, class)
+data_types <- data_frame(data_types)
+
+
+col_names['Type'] <- data_types
+data_types
+
+```
+
+Before converting these columns into factors, I will look to see how many unique
+values are present in each column. This will enable me to find any columns
+that may have significant skewness to one category
+
+```{r}
+loan %>% summarise_all(funs(n_distinct(.)))
+# Since 'Age' has the most unique values (8) for our target columns, we will use this information
+# to convert all columns with unique vales <=8 into factors. Or we will use another method(below)
+```
+Dealing with data types:
+
+```{r}
+loan %>% 
+  select_if(is.character) #21
+loan %>% 
+  mutate_if(is.character, as.factor)->loan
+
+
+loan$Status <- sapply(loan$Status, as.factor)
+loan$term <- sapply(loan$term, as.factor)
+
+summary(loan)# we can see that some of the factor columns are heavily skewed
+#towards specific level(s)
+
+
+#Gender --> More male/joint than female
+#approv_in_adv --> more 'no pre-approval' than not. about 100k difference
+#business_or_commercial --> Majority is for nob/c
+#interest_only  --
+#region --> majority of the applicants are from the Nort and the South
+# Security_Type
+# open_credit --> only 556 of the applicants have open_credit
+# loan_type -- > Majority of applicants applied to type1 loan
+# Credit_Worthiness --> majority of applicants have credit_worthiness of l1
+# Term -- > 360    :121685 and 180    : 12981  -->  there are 26 levels to this column, not sure what to do
+# Neg_ammortization --> majority of applicant neg. ammortization
+# Secured by/total units--> almost entirely by Home, which are 1 unit()
+
+str(loan)
+
+# as we can see, all columns that we intent to transform into 'factor' are currently
+#generated as 'character' type, except for term and status. We can use this information
+# to convert all 'character' types into 'factors' then add 'term' and 'status' manually. 
+```
+
+
+
+We can already see that we will need to drops some of the columns even before
+doing any visualization. 
+
+
+
+Drop:
+ID --> Id column is arbitrary and will not have any impact on EDA and consequent
+models. All ids are unique, indicating that we do not have 'repeat' clients that
+have outstanding loan with our company
+
+Year --> May drop or may not. Although year will be a good feature to have to 
+to its socioeconomic implications (how was the economy in a particular year), I 
+will most likely drop this column. Although, I do think if I add additional feature(s)
+on top of the year, like economic indicators, it may improve my model.
+
+THIS IS SOMETHING FOR THE FUTURE DUE TO TIME CONSTRAINTS.
+```{r}
+loan <- subset(loan,select = -c(ID,year))
+
+loan
+
+```
+
+```{r}
+ggpairs(loan[,10:11]) # there is some correlation between interest_rate_spread and rate of interest
+
+ggplot()+geom_boxplot(aes(x = loan$Status, y = loan$rate_of_interest))
+```
+
