@@ -18,6 +18,7 @@ library(GGally) #for graphing and calculations.
 library(ltm) # Used for finding correlation between dichotomous categorical variable and continuous variable using function (biserial.cor())
 library(caret) # for testing and predictions
 library(mltools) #provides machine learning tools
+library(ggthemes) #for customized themes for ggplots
 ```
 
 Loading the Dataset:
@@ -149,5 +150,219 @@ loan
 ggpairs(loan[,10:11]) # there is some correlation between interest_rate_spread and rate of interest
 
 ggplot()+geom_boxplot(aes(x = loan$Status, y = loan$rate_of_interest))
+# we can see that there not much of a correlation between clients who defaulted(1)
+# and rate of interest. Same thing can be said about clients who did not default.
+```
+
+```{r}
+ggplot()+geom_smooth(aes(x=loan$income, y = loan$property_value),show.legend = T)+
+  xlab("Income - Monthly($)")+
+  ylab("Property Value($)")+
+  xlim(10000,500000)+scale_x_continuous(breaks=seq(10000, 500000, 1000000), limits=c(0, 500000))
+  
+```
+```{r}
+#biserial.cor(loan$Credit_Score, loan$Status) # There is almost 0 correlation between credit score and default.
+```
+
+
+What is the correlation between credit score and default rate. This is something
+to consider as it seems counter intuitive.
+
+As I conducted more analysis, it seemed appropriate to change the column of 'credit_score'
+to a factor with 5 labels.
+Labels are generated from Experian, one of the leading credit-reporting companies.
+
+
+0--79 --> Very Poor
+580-669 --> Poor
+670-739 --> Fair
+740-799 --> Good
+799-above --> Excelent
+
+```{r}
+
+loan$Credit_Score<- cut(loan$Credit_Score, breaks=c(0, 579, 669, 739, 799,Inf), labels = 
+                          
+                                                                                  c('VPoor',
+                                                                                   'Poor',
+                                                                                   'Fair',
+                                                                                   'Good',
+                                                                                   'Excelent'))
+
+str(loan)
+
+
+ggplot()+geom_bar(aes(x = loan$Credit_Score, fill = loan$Status),position = 'dodge2')
+```
+
+
+
+
+
+DTIR AND STATUS
+
+```{r}
+ggplot()+geom_density(aes(x = loan$dtir, color = loan$Status)) 
+ggplot()+geom_boxplot(aes(x = loan$Status, y = loan$dtir1))
+```
+
+
+Loan amount and Status
+```{r}
+ggplot()+geom_density(aes(x = loan$loan_amount, color = loan$Status))
+```
+
+rate of interest and status
+
+```{r}
+ggplot()+geom_density(aes(x = loan$rate_of_interest, color = loan$Status))
+```
+
+CORRELATION BETWEEN FEATURES
+
+```{r}
+ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread))+
+  xlab("Rate of Interest")+
+  ylab("Interest Rate Spread")+
+  labs(title = "Rate of Interest Against Interest Rate Spread", )+
+  theme(plot.title = element_text(face = "bold.italic", color = "red", size = 14))+
+    theme_solarized() +
+  scale_colour_solarized()
+```
+
+
+```{r}
+
+sts <- boxplot.stats(loan$property_value)$stats #to get the quantiles and outliers
+sts
+Status = loan$Status
+g <- ggplot()+geom_boxplot(aes(x = loan$Status, y = loan$property_value, fill =Status), outliers.shape = NA)+
+  coord_cartesian(ylim = c(sts[2]/2,max(sts)*1.05))
+
+g+theme_economist() +
+  scale_colour_economist()
+```
+
+
+```{r}
+#quartz()
+
+Status <- loan$Status
+ggplot()+geom_bar(aes(x = loan$Status, fill = Status))+ 
+  labs(
+    title = "Status",
+    subtitle = "Distribution of Default Ratio",
+    caption = "Data from www.kaggle.com/yasserh/loan-default-dataset",
+    
+    x = "Status",
+    y = "Count"
+  )+
+  theme(plot.caption = element_text(face = "italic"))+
+  theme(plot.title = element_text(lineheight= 0.9,
+         color="black",
+         face="bold.italic",
+         family="sans",
+         size=16,
+         hjust=0.5))+
+  theme(plot.subtitle = element_text(face = 'italic',
+                                     color = "blue",
+                                     size = 6,
+                                     hjust = 0.9))+
+ 
+
+  theme_solarized() +
+  scale_colour_solarized()
+  
+```
+```{r}
+quartz()
+ggplot()+geom_bar(aes(x = loan$Status, fill = loan$Credit_Score), position = 'dodge2')+
+  labs(
+    title = "Status & Credit Score",
+    subtitle = "Credit Score and how it Impacts Default Rates",
+    caption = "Data from www.kaggle.com/yasserh/loan-default-dataset",
+    tag = "0-579 --> Very Poor 
+    580-669 --> Poor 
+    670-739 --> Fair 
+    740-799 --> Good 
+    799-above --> Excelent",
+    x = "Status",
+    y = "Count"
+  )+
+  theme(plot.caption = element_text(face = "italic"))+
+  theme(plot.title = element_text(lineheight= 0.9,
+         color="black",
+         face="bold.italic",
+         family="sans",
+         size=16,
+         hjust=0.5))+
+  theme(plot.subtitle = element_text(face = 'italic',
+                                     color = "blue",
+                                     size = 12,
+                                     hjust = 0.5))+
+  theme(plot.tag = element_text(size = 8,
+                                face = 'italic',
+                                hjust = 0.6,
+                                colour = "red"))+
+    theme_solarized() +
+  scale_colour_solarized()
+```
+
+
+
+
+
+
+
+
+                                
+
+
+
+
+
+
+AT SOME POINT THESE WILL BE DROPPED
+  'rate_of_interest'
+    'Interest_rate_spread'
+    'Upfront_charges'
+    'income'
+    'property_value'
+    'LTV'
+    'dtir1'
+
+```{r}
+# The Following columns contain NA's for 'Status 1', therefore will need to be dropped
+# as to not to interfere with our model.
+
+
+loan2 <- subset(loan2, select = -c(rate_of_interest, Interest_rate_spread, Upfront_charges, income, property_value, LTV, dtir1))
+cor(loan2[sapply(loan2,is.numeric)])
+```
+
+
+
+
+
+
+
+SOME MODEL
+```{r}
+
+logicalmodel <- glm(loan2$Status~ loan2$Credit_Score, family = "binomial")
+featurePlot(logicalmodel)
+
+summary(logicalmodel)
+ggplot()+geom_boxplot(aes(x = loan2$Credit_Score, y = loan2$Status))
+View(loan2)
+
+featurePlot(loan2[29,-31],y = loan2$Status,plot='pairs')
+
+
+loan2_no_na <- drop_na(loan2) #dropped all na values (bad --> all status column becomes 0)
+summary(loan2_no_na)
+
+cor(loan2_no_na[sapply(loan2_no_na,is.numeric)]) #checking Correlation between numeric variables. 
 ```
 
