@@ -13,13 +13,36 @@ library(bslib)
 library(shinythemes)
 
 
-ui <-navbarPage("Loan", collapsible = T, inverse = T, theme =bs_theme(
+ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_theme(
   bg = "#101010", 
   fg = "#FDF7F7", 
   primary = "#ED79F9", 
   base_font = font_google("Prompt"),
   code_font = font_google("JetBrains Mono")),
-  tabPanel("About")
+  tabPanel("About",
+           sidebarLayout(
+             sidebarPanel(img(src="~/Desktop/image.png",height = 300, width = 220)),
+             mainPanel("Hello")
+             ),
+          
+           ),
+      
+  
+  
+  tabPanel("Features"),
+  
+  
+  tabPanel("Status"),
+  
+  
+  
+  tabPanel("Forecast"),
+  
+  navbarMenu("More",
+             tabPanel("Contact Us"),
+             tabPanel("Learn More"),
+             tabPanel("Outlook"),
+             tabPanel("Help"))
   
   
 
