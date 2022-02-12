@@ -7,27 +7,23 @@
 #    http://shiny.rstudio.com/
 #
 
+
 library(shiny)
+library(bslib)
+library(shinythemes)
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
 
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
+ui <-navbarPage("Loan", collapsible = T, inverse = T, theme =bs_theme(
+  bg = "#101010", 
+  fg = "#FDF7F7", 
+  primary = "#ED79F9", 
+  base_font = font_google("Prompt"),
+  code_font = font_google("JetBrains Mono")),
+  tabPanel("About")
+  
+  
 
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
+  
+)
 
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("distPlot")
-        )
-    )
-))
+shinyApp(ui, server)
