@@ -21,29 +21,69 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   base_font = font_google("Prompt"),
   code_font = font_google("JetBrains Mono")),
   tabPanel("About",
-           sidebarLayout(
-             sidebarPanel(img(src="image.png",height = 460, width = 430),
-                          br(),
-                          helpText("Dowload Dataset"),
-                          radioButtons("type", "Format Type:",
-                                       choices = c("CSV", "Text (TSV)", "Text (Space Seperated)")),
-                          br(),
-                          helpText("Click on the Download button to download the full dataset"),
-                          downloadButton("downloaddata", "Download")),
-             mainPanel(tabsetPanel(type="tab",
-                                   tabPanel("Data", tableOutput("data"), icon = icon("database")),
-                                   tabPanel("Summary", verbatimTextOutput('summary'),icon = icon("table")),
-                                   tabPanel("Structure", verbatimTextOutput("str"), icon = icon("receipt")),
-                                   tabPanel("Plot", plotOutput('stplot'), icon = icon("images")),
-                                   tabPanel("Missing Data",tableOutput("missing"),icon = icon("exclamation")),
-                                   tabPanel("Missing Data Visualized", plotOutput("vismissing"),icon = icon("images"))))
-           ),
-           
-           
-  ),
+           tabsetPanel(type = "tab",
+                       tabPanel("Data",icon = icon("database"),
+                                sidebarLayout(
+                                  sidebarPanel(width=3,
+                                    img(src="image.png",height = 400, width = 310),
+                                    helpText("Dowload Dataset"),
+                                    radioButtons("type", "Format Type:",
+                                                 choices = c("CSV", "Text (TSV)", "Text (Space Seperated)")),
+                                    br(),
+                                    helpText("Click on the Download button to download the full dataset"),
+                                    downloadButton("downloaddata", "Download")),
+                                  
+
+                       mainPanel(tableOutput("data")))),
+                       
+                       
+                       tabPanel("Summary",icon = icon("table"),
+
+                                sidebarLayout(
+
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 400, width = 310),
+                                               helpText("Dowload Summary Table"),
+                                               radioButtons("type", "Format Type:",
+                                                            choices = c("CSV", "Text (TSV)", "Text (Space Seperated)")),
+                                               br(),
+                                               helpText("Click on the Download button to download the summary table"),
+                                               downloadButton("downloadsum", "Download")),
+
+
+
+                                  mainPanel(verbatimTextOutput("summary")))),
+                       tabPanel("Structure", icon = icon("receipt"),
+                                sidebarLayout(
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 400, width = 310),
+                                               helpText("Dowload Structure Table"),
+                                               radioButtons("type", "Format Type:",
+                                                            choices = c("CSV", "Text (TSV)", "Text (Space Seperated)")),
+                                               br(),
+                                               helpText("Click on the Download button to download the structure of the dataset"),
+                                               downloadButton("downloadstr", "Download")),
+                                  
+                                  mainPanel(verbatimTextOutput("str")))),
+                       
+                       
+                       tabPanel("Plot",icon = icon("images"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput('stplot',height = "600px"), 
+                                            downloadButton(outputId = "down", label = "Download the Plot")))),
+                                               
+                                
+
+               
+                       tabPanel("Missing Data", icon = icon("exclamation"),
+                                sidebarLayout(
+                                  sidebarPanel(tableOutput("missing")),
+                                  mainPanel(plotOutput("vismissing", height = "400px")))),
+
+                       tabPanel("Missing Data Visualized",icon = icon("images")))),
   
-  
-  
+                       
   tabPanel("Features",
            sidebarLayout(
              sidebarPanel(),
@@ -60,7 +100,13 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
            )),
   
   
-  tabPanel("Status"),
+  tabPanel("Status",
+           sidebarLayout(
+             sidebarPanel(),
+             
+             mainPanel(tabsetPanel(type = "tab",
+                                   tabPanel("Credit Score Impact", plotOutput("credit"), icon = icon("images"))))
+           )),
   
   
   
@@ -70,8 +116,40 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
              tabPanel("Contact Us", icon = icon("phone")),
              tabPanel("Learn More", icon = icon("info")),
              tabPanel("Outlook", icon = icon("plus")),
-             tabPanel("Help", icon = icon("question")))
+             tabPanel("Help", icon = icon("question"))),
   
+  tabPanel("Hello",
+              tabsetPanel(type = "tab",
+                          tabPanel("vvvv", sidebarLayout(sidebarPanel(
+                            img(src="image.png",height = 460, width = 430)
+                            
+                          ), 
+                          
+                          
+                          mainPanel('cd'))),
+                          
+                          tabPanel("vvvv", sidebarLayout(sidebarPanel(
+                            img(src="image.png",height = 460, width = 430)),
+                            mainPanel("g")))))
+                          
+                          
+                        
+                                        
+                                        
+           
+                          
+                   
+                            
+                          
+                          
+                          
+                
+                       
+           
+           
+                      
+  
+          
   
   
   

@@ -7,6 +7,48 @@ library(shiny)
     
 server <- function(input, output) {
   
+
+  
+  output$credit <- renderPlot({
+    
+    
+    
+    ggplot()+geom_bar(aes(x = loan$Credit_Score, fill = loan$Status),position = 'dodge2')+
+      
+      theme_solarized(light=F) +
+      scale_colour_solarized("red")+
+      scale_fill_manual(name="Status",values=c("bisque1","azure3"))+
+      labs(title = "Credit Score and Default Ratio",
+           x= "Credit Score",
+           y="Count (Exact)",
+           caption = "Credit Score classification is based on Experian,leading consumer credit reporting company. ",
+           subtitle = "Distinct Client Count Based on Default Status and Credit Score")+
+      theme(plot.caption = element_text(face = "italic",
+                                        size=8,
+                                        hjust = -0.1))+
+      theme(plot.title = element_text(lineheight= 0.9,
+                                      color="black",
+                                      face="bold",
+                                      family="Optima",
+                                      size=20,
+                                      hjust=0.5))+
+      theme(plot.subtitle = element_text(face = 'italic',
+                                         color = "#9F85BD",
+                                         size = 12,
+                                         hjust = 0.5))+
+      theme(plot.tag = element_text(size = 8,
+                                    face = 'italic',
+                                    hjust = 0.6,
+                                    colour = "red"))+
+      theme(text = element_text(size=10,
+                                face = "bold"))+
+      theme(axis.title = element_text(color = "#9F85BD",
+                                      size = 12,
+                                      face = "bold"))+
+      theme(axis.text =element_text( color = "#919093",
+                                     size = 10))
+  })
+  
   
   
   fileExtension <- reactive({
@@ -17,6 +59,28 @@ server <- function(input, output) {
   })
   
   output$downloadData <- downloadHandler(
+    
+    filename = function(){
+      paste(loan, fileExtension(), sep = ".")
+    },
+    content = function(file){
+      sep <- switch(input$type, "CSV" = ",", "Text (TSV)" = "\t",  "Text (Space Seperated)" = " ")
+      write.table(loan, file, sep = sep, row.names = F)
+    }
+  )
+  
+  output$downloadsumm <- downloadHandler(
+    
+    filename = function(){
+      paste(loan, fileExtension(), sep = ".")
+    },
+    content = function(file){
+      sep <- switch(input$type, "CSV" = ",", "Text (TSV)" = "\t",  "Text (Space Seperated)" = " ")
+      write.table(loan, file, sep = sep, row.names = F)
+    }
+  )
+  
+  output$downloadstr <- downloadHandler(
     
     filename = function(){
       paste(loan, fileExtension(), sep = ".")
@@ -48,32 +112,42 @@ server <- function(input, output) {
   
   output$stplot <- renderPlot({
     
-    Status <- loan$Status
-    ggplot()+geom_bar(aes(x = loan$Status, fill = Status))+ 
+    ggplot()+geom_bar(aes(x = loan$Status, fill = loan$Status))+ 
+      theme_solarized(light = F) +
+      scale_colour_solarized()+
+      scale_fill_manual(name="Status",values=c("#F82B4E","#6299D3"))+
       labs(
         title = "Status",
-        subtitle = "Distribution of Default Ratio",
-        caption = "Data from www.kaggle.com/yasserh/loan-default-dataset:
-        Default - 1 & Not Default - 0 ",
-        
+        subtitle = "Distribution of Default Ratio - Default(1) & Not Default(0)",
+        caption = "Data from www.kaggle.com/yasserh/loan-default-dataset",
         x = "Status",
-        y = "Count"
+        y = "Count (Exact)"
       )+
-      theme(plot.caption = element_text(face = "italic"))+
+      theme(plot.caption = element_text(face = "italic",
+                                        size=8,
+                                        hjust = 0.1))+
       theme(plot.title = element_text(lineheight= 0.9,
                                       color="black",
-                                      face="bold.italic",
-                                      family="sans",
-                                      size=16,
+                                      face="bold",
+                                      family="Optima",
+                                      size=20,
                                       hjust=0.5))+
       theme(plot.subtitle = element_text(face = 'italic',
-                                         color = "blue",
-                                         size = 6,
-                                         hjust = 0.9))+
-      
-      
-      theme_solarized() +
-      scale_colour_solarized()
+                                         color = "#9F85BD",
+                                         size = 12,
+                                         hjust = 0.5))+
+      theme(plot.tag = element_text(size = 8,
+                                    face = 'italic',
+                                    hjust = 0.6,
+                                    colour = "red"))+
+      theme(text = element_text(size=10,
+                                face = "bold"))+
+      theme(axis.title = element_text(color = "#9F85BD",
+                                      size = 12,
+                                      face = "bold"))+
+      theme(axis.text =element_text( color = "#919093",
+                                     size = 10))
+    
   })
   output$summary <- renderPrint({
     summary(loan)

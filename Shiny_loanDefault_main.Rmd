@@ -19,6 +19,7 @@ library(ltm) # Used for finding correlation between dichotomous categorical vari
 library(caret) # for testing and predictions
 library(mltools) #provides machine learning tools
 library(ggthemes) #for customized themes for ggplots
+library(naniar)# for na values and visualization
 ```
 
 Loading the Dataset:
@@ -30,11 +31,21 @@ loan <- data.frame(loan, stringsAsFactors = F)
 
 
 Exploring the dataset and conducting eda:
+```{r}
+
+vis_dat(loan, warn_large_data = F, palette ="cb_safe" ) +
+  theme(panel.border = element_blank(),
+      # remove strip background
+      strip.background = element_blank())
+
+
+```
 
 ```{r}
 str(loan) #148,670 obs. of  34 variables:
 View(loan)
-vis_dat(loan, warn_large_data = F) #graphing out where we can expect the most NA values
+
+  #graphing out where we can expect the most NA values
 
 na_count <-sapply(loan, function(y) sum(length(which(is.na(y)))))
 na_count <- data.frame(na_count)
@@ -204,15 +215,18 @@ str(loan)
 ```
 
 ```{r}
+
+
 ggplot()+geom_bar(aes(x = loan$Credit_Score, fill = loan$Status),position = 'dodge2')+
                  
       theme_solarized(light=F) +
   scale_colour_solarized("red")+
+  scale_fill_manual(name="Status",values=c("bisque1","azure3"))+
    labs(title = "Credit Score and Default Ratio",
                        x= "Credit Score",
                        y="Count (Exact)",
                        caption = "Credit Score classification is based on Experian,leading consumer credit reporting company. ",
-        subtitle = "Distinct Client Count Based on Default Status")+
+        subtitle = "Distinct Client Count Based on Default Status and Credit Score")+
   theme(plot.caption = element_text(face = "italic",
                                     size=8,
                                     hjust = -0.1))+
@@ -220,17 +234,23 @@ ggplot()+geom_bar(aes(x = loan$Credit_Score, fill = loan$Status),position = 'dod
          color="black",
          face="bold",
          family="Optima",
-         size=18,
+         size=20,
          hjust=0.5))+
   theme(plot.subtitle = element_text(face = 'italic',
-                                     color = "blue",
+                                     color = "#9F85BD",
                                      size = 12,
                                      hjust = 0.5))+
   theme(plot.tag = element_text(size = 8,
                                 face = 'italic',
                                 hjust = 0.6,
                                 colour = "red"))+
-  theme(text = element_text(size=10,face = "bold"))
+  theme(text = element_text(size=10,
+                            face = "bold"))+
+  theme(axis.title = element_text(color = "#9F85BD",
+                                  size = 12,
+                                  face = "bold"))+
+  theme(axis.text =element_text( color = "#919093",
+        size = 10))
 ```
 
 
@@ -334,29 +354,43 @@ g+theme_economist() +
 ```{r}
 #quartz()
 
-Status <- loan$Status
-ggplot()+geom_bar(aes(x = loan$Status, fill = Status))+ 
-    theme_solarized() +
+
+ggplot()+geom_bar(aes(x = loan$Status, fill = loan$Status))+ 
+    theme_solarized(light = F) +
   scale_colour_solarized()+
+   scale_fill_manual(name="Status",values=c("#F82B4E","#6299D3"))+
   labs(
     title = "Status",
-    subtitle = "Distribution of Default Ratio",
+    subtitle = "Distribution of Default Ratio - Default(1) & Not Default(0)",
     caption = "Data from www.kaggle.com/yasserh/loan-default-dataset",
-    
     x = "Status",
-    y = "Count"
-  )+
-  theme(plot.caption = element_text(face = "italic"))+
+    y = "Count (Exact)"
+    )+
+ theme(plot.caption = element_text(face = "italic",
+                                    size=8,
+                                    hjust = 0.1))+
   theme(plot.title = element_text(lineheight= 0.9,
          color="black",
-         face="bold.italic",
-         family="sans",
-         size=16,
+         face="bold",
+         family="Optima",
+         size=20,
          hjust=0.5))+
-  theme(plot.subtitle = element_text(face = 'bold.italic',
-                                     color = "blue4",
+  theme(plot.subtitle = element_text(face = 'italic',
+                                     color = "#9F85BD",
                                      size = 12,
-                                     hjust = 0.5))
+                                     hjust = 0.5))+
+  theme(plot.tag = element_text(size = 8,
+                                face = 'italic',
+                                hjust = 0.6,
+                                colour = "red"))+
+  theme(text = element_text(size=10,
+                            face = "bold"))+
+  theme(axis.title = element_text(color = "#9F85BD",
+                                  size = 12,
+                                  face = "bold"))+
+  theme(axis.text =element_text( color = "#919093",
+        size = 10))
+  
  
 
 
@@ -443,7 +477,7 @@ logicalmodel <- glm(loan2$Status~ loan2$Credit_Score, family = "binomial")
 featurePlot(logicalmodel)
 
 summary(logicalmodel)
-ggplot()+geom_boxplot(aes(x = loan2$Credit_Score, y = loan2$Status))
+ggplot()+geom_boxplot(aes(x = loan2$Credit_Score, y = loan2$Status))+?scale_fill_continuous()
 View(loan2)
 
 featurePlot(loan2[29,-31],y = loan2$Status,plot='pairs')
@@ -454,4 +488,8 @@ summary(loan2_no_na)
 
 cor(loan2_no_na[sapply(loan2_no_na,is.numeric)]) #checking Correlation between numeric variables. 
 ```
+
+
+
+
 
