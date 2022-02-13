@@ -237,6 +237,12 @@ ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread
   scale_colour_solarized()
 ```
 ```{r}
+
+```
+
+
+
+```{r}
 ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread))+
   xlab("Rate of Interest")+
   ylab("Interest Rate Spread")+
