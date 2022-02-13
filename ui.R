@@ -22,11 +22,18 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   code_font = font_google("JetBrains Mono")),
   tabPanel("About",
            sidebarLayout(
-             sidebarPanel(img(src="image.png",height = 300, width = 220)),
+             sidebarPanel(img(src="image.png",height = 460, width = 430),
+                          br(),
+                          helpText("Dowload Dataset"),
+                          radioButtons("type", "Format Type:",
+                                       choices = c("CSV", "Text (TSV)", "Text (Space Seperated)")),
+                          br(),
+                          helpText("Click on the Download button to download the full dataset"),
+                          downloadButton("downloaddata", "Download")),
              mainPanel(tabsetPanel(type="tab",
+                                   tabPanel("Data", tableOutput("data"), icon = icon("database")),
                                    tabPanel("Summary", verbatimTextOutput('summary'),icon = icon("table")),
                                    tabPanel("Structure", verbatimTextOutput("str"), icon = icon("receipt")),
-                                   tabPanel("Data", tableOutput("data"), icon = icon("database")),
                                    tabPanel("Plot", plotOutput('stplot'), icon = icon("images")),
                                    tabPanel("Missing Data",tableOutput("missing"),icon = icon("exclamation")),
                                    tabPanel("Missing Data Visualized", plotOutput("vismissing"),icon = icon("images"))))
@@ -40,9 +47,10 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   tabPanel("Features",
            sidebarLayout(
              sidebarPanel(),
+             
              mainPanel(tabsetPanel(type = "tab",
-                                      tabPanel("Numeric Features", icon = icon("calculator")),
-                                      tabPanel("Categorical Features", icon = icon("receipt")))
+                                      tabPanel("Numeric Features",fluid = T,  icon = icon("calculator")),
+                                      tabPanel("Categorical Features",fluid = T, icon = icon("receipt")))
               
                
                
@@ -59,10 +67,10 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   tabPanel("Forecast"),
   
   navbarMenu("More",
-             tabPanel("Contact Us",),
-             tabPanel("Learn More"),
-             tabPanel("Outlook"),
-             tabPanel("Help"))
+             tabPanel("Contact Us", icon = icon("phone")),
+             tabPanel("Learn More", icon = icon("info")),
+             tabPanel("Outlook", icon = icon("plus")),
+             tabPanel("Help", icon = icon("question")))
   
   
   

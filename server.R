@@ -7,6 +7,26 @@ library(shiny)
     
 server <- function(input, output) {
   
+  
+  
+  fileExtension <- reactive({
+    switch(input$type,
+           "CSV" = "csv",
+           "Text (TSV)" = "txt", 
+           "Text (Space Seperated)" = "txt")
+  })
+  
+  output$downloadData <- downloadHandler(
+    
+    filename = function(){
+      paste(loan, fileExtension(), sep = ".")
+    },
+    content = function(file){
+      sep <- switch(input$type, "CSV" = ",", "Text (TSV)" = "\t",  "Text (Space Seperated)" = " ")
+      write.table(loan, file, sep = sep, row.names = F)
+    }
+  )
+  
   output$vismissing <- renderPlot({
     vis_dat(loan, warn_large_data = F,sort_type = T)
   })

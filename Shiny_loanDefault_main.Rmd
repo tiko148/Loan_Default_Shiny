@@ -190,11 +190,11 @@ Labels are generated from Experian, one of the leading credit-reporting companie
 
 loan$Credit_Score<- cut(loan$Credit_Score, breaks=c(0, 579, 669, 739, 799,Inf), labels = 
                           
-                                                                                  c('VPoor',
-                                                                                   'Poor',
-                                                                                   'Fair',
-                                                                                   'Good',
-                                                                                   'Excelent'))
+                                                                                  c('VPoor(0,579)',
+                                                                                   'Poor(580-669)',
+                                                                                   'Fair(670-739)',
+                                                                                   'Good(740-799',
+                                                                                   'Excelent(800-above'))
 
 str(loan)
 
@@ -237,9 +237,26 @@ ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread
   scale_colour_solarized()
 ```
 ```{r}
+ggplot()+geom_point(aes(x = loan$income, y = loan$rate_of_interest))+
+  xlab("Income/Monthly")+
+  ylab("Interest Rate Spread")+
+  xlim(10000,100000)+
+  labs(title = "Rate of Interest Against Interest Income" )+
 
+    theme_solarized() +
+  scale_colour_solarized()
 ```
 
+```{r}
+ggplot()+geom_point(aes(x = loan$income, y = loan$rate_of_interest,))+
+  xlab("Income/Monthly")+
+  ylab("Interest Rate Spread")+
+  xlim(10000,100000)+
+  labs(title = "Rate of Interest Against Interest Income" )+
+
+    theme_solarized() +
+  scale_colour_solarized()
+```
 
 
 ```{r}
