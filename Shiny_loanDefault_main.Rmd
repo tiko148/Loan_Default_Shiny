@@ -184,23 +184,55 @@ Labels are generated from Experian, one of the leading credit-reporting companie
 580-669 --> Poor
 670-739 --> Fair
 740-799 --> Good
-799-above --> Excelent
+799-above --> Excellent
 
 ```{r}
 
 loan$Credit_Score<- cut(loan$Credit_Score, breaks=c(0, 579, 669, 739, 799,Inf), labels = 
                           
-                                                                                  c('VPoor(0,579)',
+                                                                                  c('VPoor(579)',
                                                                                    'Poor(580-669)',
                                                                                    'Fair(670-739)',
-                                                                                   'Good(740-799',
-                                                                                   'Excelent(800-above'))
+                                                                                   'Good(740-799)',
+                                                                                   'Excellent(800)'))
 
 str(loan)
 
 
-ggplot()+geom_bar(aes(x = loan$Credit_Score, fill = loan$Status),position = 'dodge2')
+
+
 ```
+
+```{r}
+ggplot()+geom_bar(aes(x = loan$Credit_Score, fill = loan$Status),position = 'dodge2')+
+                 
+      theme_solarized(light=F) +
+  scale_colour_solarized("red")+
+   labs(title = "Credit Score and Default Ratio",
+                       x= "Credit Score",
+                       y="Count (Exact)",
+                       caption = "Credit Score classification is based on Experian,leading consumer credit reporting company. ",
+        subtitle = "Distinct Client Count Based on Default Status")+
+  theme(plot.caption = element_text(face = "italic",
+                                    size=8,
+                                    hjust = -0.1))+
+  theme(plot.title = element_text(lineheight= 0.9,
+         color="black",
+         face="bold",
+         family="Optima",
+         size=18,
+         hjust=0.5))+
+  theme(plot.subtitle = element_text(face = 'italic',
+                                     color = "blue",
+                                     size = 12,
+                                     hjust = 0.5))+
+  theme(plot.tag = element_text(size = 8,
+                                face = 'italic',
+                                hjust = 0.6,
+                                colour = "red"))+
+  theme(text = element_text(size=10,face = "bold"))
+```
+
 
 
 
@@ -228,7 +260,7 @@ ggplot()+geom_density(aes(x = loan$rate_of_interest, color = loan$Status))
 CORRELATION BETWEEN FEATURES
 
 ```{r}
-ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread))+
+ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread, color = loan$Status))+
   xlab("Rate of Interest")+
   ylab("Interest Rate Spread")+
   labs(title = "Rate of Interest Against Interest Rate Spread", )+
@@ -237,7 +269,7 @@ ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread
   scale_colour_solarized()
 ```
 ```{r}
-ggplot()+geom_point(aes(x = loan$income, y = loan$rate_of_interest))+
+ggplot()+geom_point(aes(x = loan$"income", y = loan$"rate_of_interest", color = loan$Status, alpha=0.2)) +
   xlab("Income/Monthly")+
   ylab("Interest Rate Spread")+
   xlim(10000,100000)+
@@ -246,9 +278,21 @@ ggplot()+geom_point(aes(x = loan$income, y = loan$rate_of_interest))+
     theme_solarized() +
   scale_colour_solarized()
 ```
+```{r}
+ggplot()+geom_point(aes(x = loan$LTV, y = loan$dtir1, color = loan$Status, alpha=0.2)) +
+  xlab("Loan To Value (LTV)")+
+  ylab("Debt to Income Ratio(DTIR)")+
+  xlim(0,300)+
+
+  labs(title = "LTV (Loan to Value) vs DTIR (Debt to Income Ratio)",
+       caption = "DTIR of more than 100%-value of the property is less than the balance owed")+
+
+    theme_solarized() +
+  scale_colour_solarized()
+```
 
 ```{r}
-ggplot()+geom_point(aes(x = loan$income, y = loan$rate_of_interest,))+
+ggplot()+geom_point(aes(x = loan$income, y = loan$rate_of_interest, color = loan$Status))+
   xlab("Income/Monthly")+
   ylab("Interest Rate Spread")+
   xlim(10000,100000)+
@@ -276,10 +320,14 @@ sts <- boxplot.stats(loan$property_value)$stats #to get the quantiles and outlie
 sts
 Status = loan$Status
 g <- ggplot()+geom_boxplot(aes(x = loan$Status, y = loan$property_value, fill =Status), outliers.shape = NA)+
-  coord_cartesian(ylim = c(sts[2]/2,max(sts)*1.05))
+  coord_cartesian(ylim = c(sts[2]/2,max(sts)*1.05))+
+  labs(x = "Status",
+       y  = "Property Value ($)",
+       title = "Property Value and Default Ratio")
 
 g+theme_economist() +
-  scale_colour_economist()
+  scale_colour_economist()+
+  facet_grid(loan$income)
 ```
 
 
@@ -288,6 +336,8 @@ g+theme_economist() +
 
 Status <- loan$Status
 ggplot()+geom_bar(aes(x = loan$Status, fill = Status))+ 
+    theme_solarized() +
+  scale_colour_solarized()+
   labs(
     title = "Status",
     subtitle = "Distribution of Default Ratio",
@@ -303,14 +353,13 @@ ggplot()+geom_bar(aes(x = loan$Status, fill = Status))+
          family="sans",
          size=16,
          hjust=0.5))+
-  theme(plot.subtitle = element_text(face = 'italic',
-                                     color = "blue",
-                                     size = 6,
-                                     hjust = 0.9))+
+  theme(plot.subtitle = element_text(face = 'bold.italic',
+                                     color = "blue4",
+                                     size = 12,
+                                     hjust = 0.5))
  
 
-  theme_solarized() +
-  scale_colour_solarized()
+
   
 ```
 ```{r}
