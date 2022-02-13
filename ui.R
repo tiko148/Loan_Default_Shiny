@@ -22,12 +22,14 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   code_font = font_google("JetBrains Mono")),
   tabPanel("About",
            sidebarLayout(
-             sidebarPanel(img(src="~/Desktop/image.png",height = 300, width = 220)),
+             sidebarPanel(img(src="image.png",height = 300, width = 220)),
              mainPanel(tabsetPanel(type="tab",
-                                   tabPanel("Summary"),
-                                   tabPanel("Structure"),
+                                   tabPanel("Summary", verbatimTextOutput('summary')),
+                                   tabPanel("Structure", verbatimTextOutput("str")),
                                    tabPanel("Data", tableOutput("data")),
-                                   tabPanel("Plot")))
+                                   tabPanel("Plot", plotOutput('stplot')),
+                                   tabPanel("Missing Data",tableOutput("missing")),
+                                   tabPanel("Missing Data Visualized", plotOutput("vismissing"))))
            ),
            
            
@@ -37,18 +39,16 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   
   tabPanel("Features",
            sidebarLayout(
-             sidebarPanel(
-               selectInput("slid",
-                           "Select the X Variable:",
-                           c("California", "Florida", "Texas", "NY", "Arizona"),
-                           selected = "Texas",
-                           selectize = T,
-                           multiple = F)
+             sidebarPanel(),
+             mainPanel(tabsetPanel(type = "tab",
+                                      tabPanel("Numeric Features"),
+                                      tabPanel("Categorical Features"))
+              
                
                
                
              ),
-             mainPanel(textOutput("state"))
+            
            )),
   
   
@@ -69,4 +69,6 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   
 )
 
-shinyApp(ui = ui, server = server)
+
+
+

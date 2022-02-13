@@ -47,7 +47,13 @@ na_count %>%
 
 
 na_values_counter["% of All Data"] = (na_values_counter["na_count"]/nrow(loan))*100
-na_values_counter
+
+
+x <- tibble(rownames(na_values_counter))
+x
+View(na_values_counter)
+
+na_values_counter <- cbind(x,na_values_counter)
 
 
 # As we can can see there are several columns that contain significant amount
@@ -348,6 +354,8 @@ AT SOME POINT THESE WILL BE DROPPED
 
 loan2 <- subset(loan2, select = -c(rate_of_interest, Interest_rate_spread, Upfront_charges, income, property_value, LTV, dtir1))
 cor(loan2[sapply(loan2,is.numeric)])
+
+str(loan)
 ```
 
 
