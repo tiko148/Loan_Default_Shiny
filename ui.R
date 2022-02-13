@@ -7,27 +7,66 @@
 #    http://shiny.rstudio.com/
 #
 
+
 library(shiny)
+library(bslib)
+library(shinythemes)
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
 
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
 
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
+ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_theme(
+  bg = "#101010", 
+  fg = "#FDF7F7", 
+  primary = "#ED79F9", 
+  base_font = font_google("Prompt"),
+  code_font = font_google("JetBrains Mono")),
+  tabPanel("About",
+           sidebarLayout(
+             sidebarPanel(img(src="~/Desktop/image.png",height = 300, width = 220)),
+             mainPanel(tabsetPanel(type="tab",
+                                   tabPanel("Summary"),
+                                   tabPanel("Structure"),
+                                   tabPanel("Data", tableOutput("data")),
+                                   tabPanel("Plot")))
+           ),
+           
+           
+  ),
+  
+  
+  
+  tabPanel("Features",
+           sidebarLayout(
+             sidebarPanel(
+               selectInput("slid",
+                           "Select the X Variable:",
+                           c("California", "Florida", "Texas", "NY", "Arizona"),
+                           selected = "Texas",
+                           selectize = T,
+                           multiple = F)
+               
+               
+               
+             ),
+             mainPanel(textOutput("state"))
+           )),
+  
+  
+  tabPanel("Status"),
+  
+  
+  
+  tabPanel("Forecast"),
+  
+  navbarMenu("More",
+             tabPanel("Contact Us"),
+             tabPanel("Learn More"),
+             tabPanel("Outlook"),
+             tabPanel("Help"))
+  
+  
+  
+  
+)
 
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("distPlot")
-        )
-    )
-))
+shinyApp(ui = ui, server = server)

@@ -230,6 +230,15 @@ ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread
     theme_solarized() +
   scale_colour_solarized()
 ```
+```{r}
+ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread))+
+  xlab("Rate of Interest")+
+  ylab("Interest Rate Spread")+
+  labs(title = "Rate of Interest Against Interest Rate Spread", )+
+  theme(plot.title = element_text(face = "bold.italic", color = "red", size = 14))+
+    theme_solarized() +
+  scale_colour_solarized()
+```
 
 
 ```{r}
