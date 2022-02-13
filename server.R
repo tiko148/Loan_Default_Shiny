@@ -33,7 +33,8 @@ server <- function(input, output) {
       labs(
         title = "Status",
         subtitle = "Distribution of Default Ratio",
-        caption = "Data from www.kaggle.com/yasserh/loan-default-dataset",
+        caption = "Data from www.kaggle.com/yasserh/loan-default-dataset:
+        Default - 1 & Not Default - 0 ",
         
         x = "Status",
         y = "Count"

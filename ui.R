@@ -24,12 +24,12 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
            sidebarLayout(
              sidebarPanel(img(src="image.png",height = 300, width = 220)),
              mainPanel(tabsetPanel(type="tab",
-                                   tabPanel("Summary", verbatimTextOutput('summary')),
-                                   tabPanel("Structure", verbatimTextOutput("str")),
-                                   tabPanel("Data", tableOutput("data")),
-                                   tabPanel("Plot", plotOutput('stplot')),
-                                   tabPanel("Missing Data",tableOutput("missing")),
-                                   tabPanel("Missing Data Visualized", plotOutput("vismissing"))))
+                                   tabPanel("Summary", verbatimTextOutput('summary'),icon = icon("table")),
+                                   tabPanel("Structure", verbatimTextOutput("str"), icon = icon("receipt")),
+                                   tabPanel("Data", tableOutput("data"), icon = icon("database")),
+                                   tabPanel("Plot", plotOutput('stplot'), icon = icon("images")),
+                                   tabPanel("Missing Data",tableOutput("missing"),icon = icon("exclamation")),
+                                   tabPanel("Missing Data Visualized", plotOutput("vismissing"),icon = icon("images"))))
            ),
            
            
@@ -41,8 +41,8 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
            sidebarLayout(
              sidebarPanel(),
              mainPanel(tabsetPanel(type = "tab",
-                                      tabPanel("Numeric Features"),
-                                      tabPanel("Categorical Features"))
+                                      tabPanel("Numeric Features", icon = icon("calculator")),
+                                      tabPanel("Categorical Features", icon = icon("receipt")))
               
                
                
@@ -59,7 +59,7 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   tabPanel("Forecast"),
   
   navbarMenu("More",
-             tabPanel("Contact Us"),
+             tabPanel("Contact Us",),
              tabPanel("Learn More"),
              tabPanel("Outlook"),
              tabPanel("Help"))
