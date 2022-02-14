@@ -22,11 +22,74 @@ library(ggthemes) #for customized themes for ggplots
 library(naniar)# for na values and visualization
 ```
 
-Loading the Dataset:
+Code to Run for Shiny to Work
 
 ```{r}
+
+
 loan <- read_csv("~/Desktop/LoanDefault_Shiny/Loan_Default.csv")
 loan <- data.frame(loan, stringsAsFactors = F)
+logistic_model <- train(
+  form = Status ~ .,
+  data = train,
+  trControl = trainControl(method = "cv", number = 5),#Summary of sample sizes: 80618, 80618, 80618, 80619, 80619 
+  method = "glm",
+  family = "binomial",
+  na.action=na.exclude
+)
+
+
+loan_class <- (loan) #98187 obs. of  32 variables:
+loan_class <- subset(loan_class,select = -c(rate_of_interest,
+    Interest_rate_spread,
+    Upfront_charges,
+    income,
+    property_value,
+    LTV,
+    dtir1
+))
+
+
+
+train_test <- createDataPartition(loan_class$Status, p = 0.70, list = F)
+train <- loan_class[train_test,] #70% of data (104,000 observations x 32 variables)
+test <- loan_class[-train_test,]#30% of data (44,600 observations x 32 variables)
+
+
+
+```
+```{r}
+library(tidyverse) #for data manipulation and wrangling
+library(visdat) # for graphing na values and similar tasks relating to na values
+library(mice) # this library has tools to impute missing data
+library(VIM)
+library(GGally) #for graphing and calculations.
+library(ltm) # Used for finding correlation between dichotomous categorical variable and continuous variable using function (biserial.cor())
+library(caret) # for testing and predictions
+library(mltools) #provides machine learning tools
+library(ggthemes) #for customized themes for ggplots
+library(naniar)# for na values and visualization
+
+
+loan <- read_csv("~/Desktop/LoanDefault_Shiny/Loan_Default.csv")
+loan <- data.frame(loan, stringsAsFactors = F)
+
+loan %>%
+  mutate_if(is.character, as.factor)->loan
+
+
+loan$Status <- sapply(loan$Status, as.factor)
+loan$term <- sapply(loan$term, as.factor)
+
+
+loan$Credit_Score<- cut(loan$Credit_Score, breaks=c(0, 579, 669, 739, 799,Inf), labels =
+
+                          c('VPoor(579)',
+                            'Poor(580-669)',
+                            'Fair(670-739)',
+                            'Good(740-799)',
+                            'Excellent(800)'))
+
 ```
 
 
