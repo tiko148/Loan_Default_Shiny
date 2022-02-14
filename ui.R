@@ -22,7 +22,8 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   code_font = font_google("JetBrains Mono")),
   tabPanel("About",
            tabsetPanel(type = "tab",
-                       tabPanel("Data",icon = icon("database"),
+                       tabPanel("Loan Default Dataset",br(),
+                                title = "Data",icon = icon("database"),
                                 sidebarLayout(
                                   sidebarPanel(width=3,
                                     img(src="image.png",height = 400, width = 310),
@@ -79,25 +80,47 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
                        tabPanel("Missing Data", icon = icon("exclamation"),
                                 sidebarLayout(
                                   sidebarPanel(tableOutput("missing")),
-                                  mainPanel(plotOutput("vismissing", height = "400px")))),
+                                  mainPanel(plotOutput("vismissing", height = "600px")))),
 
                        tabPanel("Missing Data Visualized",icon = icon("images")))),
   
                        
   tabPanel("Features",
-           sidebarLayout(
-             sidebarPanel(),
-             
-             mainPanel(tabsetPanel(type = "tab",
-                                      tabPanel("Numeric Features",fluid = T,  icon = icon("calculator")),
-                                      tabPanel("Categorical Features",fluid = T, icon = icon("receipt")))
-              
-               
-               
-               
-             ),
-            
-           )),
+           tabsetPanel(type = "tab",
+                       tabPanel("Rate of Interest & Interest Spread",  icon = icon("calculator"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("intspread", height = 600))
+                                               
+                                )),
+                       tabPanel("LTV & DTIR", icon = icon("calculator"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  
+                                  mainPanel(plotOutput("dtirltv", height = 600))
+                                )),
+                       tabPanel("DTIR (CLoser Look)",fluid = T, icon = icon("receipt"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("dtir", height = 600))
+                                
+                                  
+                                )),
+                       tabPanel("Property Value", fluid = T, icon = icon("calculator"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("propdtir", height = 600))
+                                )),
+                       
+                       tabPanel("Income", fluid = T, icon = icon("calculator"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("inc", height = 600))
+                       
+                       
+                       
+                       
+                       )),
   
   
   tabPanel("Status",

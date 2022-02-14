@@ -281,12 +281,38 @@ CORRELATION BETWEEN FEATURES
 
 ```{r}
 ggplot()+geom_point(aes(x = loan$rate_of_interest, y = loan$Interest_rate_spread, color = loan$Status))+
-  xlab("Rate of Interest")+
-  ylab("Interest Rate Spread")+
-  labs(title = "Rate of Interest Against Interest Rate Spread", )+
-  theme(plot.title = element_text(face = "bold.italic", color = "red", size = 14))+
-    theme_solarized() +
-  scale_colour_solarized()
+  theme_solarized(light=F) +
+  scale_colour_solarized("red")+
+  scale_color_manual(name="Loan Status",values=c("#D60048","#2AAA69"))+
+   labs(title = "Rate of Interest and Interest Rate Spread",
+                       x= "Rate of Interest",
+                       y="Interest Rate Spread",
+                       caption = "*Interest Rates are Expected to Grow*",
+        subtitle = "Relationship Between Interest Rates and Interest Rate Spread")+
+  theme(plot.caption = element_text(face = "italic",
+                                    size=10,
+                                    hjust = -0.1))+
+  theme(plot.title = element_text(lineheight= 0.9,
+         color="black",
+         face="bold",
+         family="Optima",
+         size=24,
+         hjust=0.5))+
+  theme(plot.subtitle = element_text(face = 'italic',
+                                     color = "#9F85BD",
+                                     size = 14,
+                                     hjust = 0.5))+
+  theme(plot.tag = element_text(size = 10,
+                                face = 'italic',
+                                hjust = 0.6,
+                                colour = "red"))+
+  theme(text = element_text(size=12,
+                            face = "bold"))+
+  theme(axis.title = element_text(color = "#9F85BD",
+                                  size = 14,
+                                  face = "bold"))+
+  theme(axis.text =element_text( color = "#919093",
+        size = 12))
 ```
 ```{r}
 ggplot()+geom_point(aes(x = loan$"income", y = loan$"rate_of_interest", color = loan$Status, alpha=0.2)) +
@@ -299,6 +325,8 @@ ggplot()+geom_point(aes(x = loan$"income", y = loan$"rate_of_interest", color = 
   scale_colour_solarized()
 ```
 ```{r}
+
+
 ggplot()+geom_point(aes(x = loan$LTV, y = loan$dtir1, color = loan$Status, alpha=0.2)) +
   xlab("Loan To Value (LTV)")+
   ylab("Debt to Income Ratio(DTIR)")+
@@ -487,6 +515,13 @@ loan2_no_na <- drop_na(loan2) #dropped all na values (bad --> all status column 
 summary(loan2_no_na)
 
 cor(loan2_no_na[sapply(loan2_no_na,is.numeric)]) #checking Correlation between numeric variables. 
+```
+
+
+
+
+```{r}
+View(loan)
 ```
 
 
