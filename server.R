@@ -3,9 +3,227 @@
 library(shiny)
 
 
-
     
 server <- function(input, output) {
+  
+  
+  output$opgender <- renderPlot({
+    ggplot()+geom_count(aes(x = loan$dtir1,y = loan$open_credit,color = loan$Status))+
+      theme_solarized(light=F) +
+      scale_color_solarized("red")+
+      scale_color_manual(name="Status",values=c("#D60048","#2AAA69"))+
+      labs(title = "Open Credit & DTIR",
+           subtitle = "Shape Size Indicates Volume",
+           x= "DTIR (Debt to Income Ratio)",
+           y="Open Credit (Yes or No)",
+           caption = "*Note the volume of open credit*")+
+
+      
+      
+      theme(plot.caption = element_text(face = "italic",
+                                        size=12,
+                                        hjust = 0.1))+
+      theme(plot.title = element_text(lineheight= 0.9,
+                                      color="black",
+                                      face="bold",
+                                      family="Optima",
+                                      size=26,
+                                      hjust=0.5))+
+      theme(plot.subtitle = element_text(face = 'italic',
+                                         color = "#9F85BD",
+                                         size = 16,
+                                         hjust = 0.5))+
+      theme(plot.tag = element_text(size = 12,
+                                    face = 'italic',
+                                    hjust = 0.6,
+                                    colour = "red"))+
+      theme(text = element_text(size=14,
+                                face = "bold"))+
+      theme(axis.title = element_text(color = "#9F85BD",
+                                      size = 16,
+                                      face = "bold"))+
+      theme(axis.text =element_text( color = "#919093",
+                                     size = 16))
+    
+    
+    
+    
+  })
+  
+  
+  
+  output$opencredit <- renderPlot({
+    ggplot()+geom_boxplot(aes(x = loan$open_credit,y = loan$income/1000,color = loan$Status))+
+      theme_solarized(light=F) +
+      scale_colour_solarized("red")+
+      scale_color_manual(name="Status",values=c("#D60048","#2AAA69"))+
+      labs(title = "Open Credit Status & Income)",
+           x= "Open Credit (Yes or No)",
+           y="Income (in thousands $)",
+           caption = "*Note the Impact on status*")+
+      ylim(0,150)+
+      
+      
+      theme(plot.caption = element_text(face = "italic",
+                                        size=12,
+                                        hjust = 0.1))+
+      theme(plot.title = element_text(lineheight= 0.9,
+                                      color="black",
+                                      face="bold",
+                                      family="Optima",
+                                      size=26,
+                                      hjust=0.5))+
+      theme(plot.subtitle = element_text(face = 'italic',
+                                         color = "#9F85BD",
+                                         size = 16,
+                                         hjust = 0.5))+
+      theme(plot.tag = element_text(size = 12,
+                                    face = 'italic',
+                                    hjust = 0.6,
+                                    colour = "red"))+
+      theme(text = element_text(size=14,
+                                face = "bold"))+
+      theme(axis.title = element_text(color = "#9F85BD",
+                                      size = 16,
+                                      face = "bold"))+
+      theme(axis.text =element_text( color = "#919093",
+                                     size = 16))
+    
+    
+    
+    
+    
+    
+    
+  })
+  
+  
+  output$credensity <- renderPlot({
+    
+    
+    
+    ggplot()+geom_boxplot(aes(x = loan$age,y = loan$dtir1,color = loan$Status))+
+      theme_solarized(light=F) +
+      scale_colour_solarized("red")+
+      scale_color_manual(name="Status",values=c("#D60048","#2AAA69"))+
+      labs(title = "Age & DTIR (Debt to Income Ratio)",
+           x= "Age",
+           y="DTIR (Debt to Income Ratio)",
+           caption = "*Note the consistency across all age groups*")+
+      
+      
+      theme(plot.caption = element_text(face = "italic",
+                                        size=12,
+                                        hjust = 0.1))+
+      theme(plot.title = element_text(lineheight= 0.9,
+                                      color="black",
+                                      face="bold",
+                                      family="Optima",
+                                      size=26,
+                                      hjust=0.5))+
+      theme(plot.subtitle = element_text(face = 'italic',
+                                         color = "#9F85BD",
+                                         size = 16,
+                                         hjust = 0.5))+
+      theme(plot.tag = element_text(size = 12,
+                                    face = 'italic',
+                                    hjust = 0.6,
+                                    colour = "red"))+
+      theme(text = element_text(size=14,
+                                face = "bold"))+
+      theme(axis.title = element_text(color = "#9F85BD",
+                                      size = 16,
+                                      face = "bold"))+
+      theme(axis.text =element_text( color = "#919093",
+                                     size = 16))
+  })
+  
+  
+  output$bargender <- renderPlot({
+    ggplot()+geom_bar(aes(x = loan$Status, fill = loan$Credit_Score), position = 'dodge2')+
+      theme_solarized(light=F) +
+      scale_colour_solarized("red")+
+      scale_fill_manual(name="Loan Status",values=c("#D60048","#2AAA69","#169B23",
+                                                    "#38D2AF", "#42201B"))+
+      labs(title = "Status & Credit Score",
+           x= "Status",
+           y="Count (Exact)",
+           caption = "*Note the clients with excellent credit score who defaulted*",
+           subtitle = "How likely to Default based on Credit Score")+
+ 
+      
+      theme(plot.caption = element_text(face = "italic",
+                                        size=12,
+                                        hjust = 0.1))+
+      theme(plot.title = element_text(lineheight= 0.9,
+                                      color="black",
+                                      face="bold",
+                                      family="Optima",
+                                      size=26,
+                                      hjust=0.5))+
+      theme(plot.subtitle = element_text(face = 'italic',
+                                         color = "#9F85BD",
+                                         size = 16,
+                                         hjust = 0.5))+
+      theme(plot.tag = element_text(size = 12,
+                                    face = 'italic',
+                                    hjust = 0.6,
+                                    colour = "red"))+
+      theme(text = element_text(size=14,
+                                face = "bold"))+
+      theme(axis.title = element_text(color = "#9F85BD",
+                                      size = 16,
+                                      face = "bold"))+
+      theme(axis.text =element_text( color = "#919093",
+                                     size = 16))
+    
+    
+    
+  })
+  
+  
+  output$prpinc <- renderPlot({
+    
+    ggplot()+geom_point(aes(x = loan$property_value/1000, y = loan$income/1000, color = loan$Status))+
+      theme_solarized(light=F) +
+      scale_colour_solarized("red")+
+      scale_color_manual(name="Loan Status",values=c("#D60048","#2AAA69"))+
+      labs(title = "Relationship Between Income Levels & Property Level",
+           x= "Property Value (in thousands $)",
+           y="Income (in thousands $)",
+           caption = "*Note the section exceeding $100,000 in income*",
+           subtitle = "How likely to Default based on Property Value and Income")+
+      xlim(0,6000)+
+      ylim(0,300)+
+
+      
+      theme(plot.caption = element_text(face = "italic",
+                                        size=12,
+                                        hjust = 0.1))+
+      theme(plot.title = element_text(lineheight= 0.9,
+                                      color="black",
+                                      face="bold",
+                                      family="Optima",
+                                      size=26,
+                                      hjust=0.5))+
+      theme(plot.subtitle = element_text(face = 'italic',
+                                         color = "#9F85BD",
+                                         size = 16,
+                                         hjust = 0.5))+
+      theme(plot.tag = element_text(size = 12,
+                                    face = 'italic',
+                                    hjust = 0.6,
+                                    colour = "red"))+
+      theme(text = element_text(size=14,
+                                face = "bold"))+
+      theme(axis.title = element_text(color = "#9F85BD",
+                                      size = 16,
+                                      face = "bold"))+
+      theme(axis.text =element_text( color = "#919093",
+                                     size = 16))
+    
+  
+  })
   
   output$inc <- renderPlot({
     ggplot()+geom_point(aes(x = loan$income/1000, y = loan$LTV, color = loan$Status))+
@@ -17,6 +235,8 @@ server <- function(input, output) {
            y="LTV",
            caption = "*Note the section exceeding $100,000 in income*",
            subtitle = "How likely to Default based on LTV and Income")+
+      xlim(0,550)+
+      ylim(0,150)+
       
       theme(plot.caption = element_text(face = "italic",
                                         size=12,
@@ -48,12 +268,12 @@ server <- function(input, output) {
   
   
   output$propdtir <- renderPlot({
-    ggplot()+geom_point(aes(x = loan$property_value/10000, y = loan$dtir1, color = loan$Status))+
+    ggplot()+geom_point(aes(x = loan$property_value/1000, y = loan$dtir1, color = loan$Status))+
       theme_solarized(light=F) +
       scale_colour_solarized("red")+
       scale_color_manual(name="Loan Status",values=c("#D60048","#2AAA69"))+
       labs(title = "Relationship Between Property Value & DTIR",
-           x= "Property Value (in ten thousands $)",
+           x= "Property Value (in  thousands $)",
            y="Debt To Income Ratio",
            caption = "*Note the section with high debt*",
            subtitle = "How likely to Default")+

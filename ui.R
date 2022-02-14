@@ -99,13 +99,7 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
                                   
                                   mainPanel(plotOutput("dtirltv", height = 600))
                                 )),
-                       tabPanel("DTIR (CLoser Look)",fluid = T, icon = icon("receipt"),
-                                sidebarLayout(
-                                  sidebarPanel(),
-                                  mainPanel(plotOutput("dtir", height = 600))
-                                
-                                  
-                                )),
+                       
                        tabPanel("Property Value", fluid = T, icon = icon("calculator"),
                                 sidebarLayout(
                                   sidebarPanel(),
@@ -121,14 +115,53 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
                        
                        
                        )),
+                       
+                       
+                       tabPanel("Income & Property Value", fluid = T, icon = icon("calculator"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("prpinc", height = 600))
+                       
+                       
+                       )))),
   
   
   tabPanel("Status",
-           sidebarLayout(
-             sidebarPanel(),
-             
-             mainPanel(tabsetPanel(type = "tab",
-                                   tabPanel("Credit Score Impact", plotOutput("credit"), icon = icon("images"))))
+           tabsetPanel(type="tab",
+                       tabPanel("DTIR (CLoser Look)",fluid = T, icon = icon("receipt"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("dtir", height = 600))
+                                  
+                                  
+                                )),
+                       tabPanel("Credit Score",fluid = T, icon = icon("receipt"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("bargender", height = 600)),
+                               
+
+                                )),
+                       tabPanel("Credit Score (more)", fluid = T, icon = icon("receipt"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("credensity", heigh = 600))
+                                )),
+                       tabPanel("Open Credit", fluid = T, icon = icon("receipt"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("opencredit", heigh = 600))
+                                )),
+                       
+                       
+                       tabPanel("Open Credit & Gender", fluid = T, icon = icon("receipt"),
+                                sidebarLayout(
+                                  sidebarPanel(),
+                                  mainPanel(plotOutput("opgender", heigh = 600))
+                                ))
+           
+           
+           
            )),
   
   
@@ -141,40 +174,7 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
              tabPanel("Outlook", icon = icon("plus")),
              tabPanel("Help", icon = icon("question"))),
   
-  tabPanel("Hello",
-              tabsetPanel(type = "tab",
-                          tabPanel("vvvv", sidebarLayout(sidebarPanel(
-                            img(src="image.png",height = 460, width = 430)
-                            
-                          ), 
-                          
-                          
-                          mainPanel('cd'))),
-                          
-                          tabPanel("vvvv", sidebarLayout(sidebarPanel(
-                            img(src="image.png",height = 460, width = 430)),
-                            mainPanel("g")))))
-                          
-                          
-                        
-                                        
-                                        
-           
-                          
-                   
-                            
-                          
-                          
-                          
-                
-                       
-           
-           
-                      
-  
-          
-  
-  
+
   
 )
 
