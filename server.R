@@ -6,6 +6,29 @@ library(shiny)
     
 server <- function(input, output) {
   
+  url <- a("Help", href='www.linkedin.com/in/tigran-vardanyan')
+  output$tab <- renderUI({
+    tagList("URL link:", url)
+    
+    
+  })
+  output$ROC <- renderTable({
+    
+    
+    roc <- filterVarImp(x = train[, -ncol(train)], y = train$Status)
+    df <- table(head(roc,10))
+    df
+  })
+  
+  
+  
+  output$varimport <- renderPlot({
+    
+    
+    variable_imp <- varImp(logistic_model,scale = F)
+    plot(variable_imp, main="Variable Importance", top = 20)
+  })
+  
   
   output$opgender <- renderPlot({
     ggplot()+geom_count(aes(x = loan$dtir1,y = loan$open_credit,color = loan$Status))+

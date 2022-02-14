@@ -549,8 +549,9 @@ plot(variable_imp, main="Variable Importance", top = 20)
 plot(logistic_model, main="Model Accuracies with MARS")
 
 
-filterVarImp(x = train[, -ncol(train)], y = train$Status)
-head(roc_imp)#The area under the ROC curve is computed for each class.
+roc <- filterVarImp(x = train[, -ncol(train)], y = train$Status)
+df <- data.frame(head(roc,20))
+df#The area under the ROC curve is computed for each class.
 
 
 

@@ -70,7 +70,8 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
                        
                        tabPanel("Plot",icon = icon("images"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 400, width = 310)),
                                   mainPanel(plotOutput('stplot',height = "600px"), 
                                             downloadButton(outputId = "down", label = "Download the Plot")))),
                                                
@@ -88,26 +89,30 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
            tabsetPanel(type = "tab",
                        tabPanel("Rate of Interest & Interest Spread",  icon = icon("calculator"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("intspread", height = 600))
                                                
                                 )),
                        tabPanel("LTV & DTIR", icon = icon("calculator"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   
                                   mainPanel(plotOutput("dtirltv", height = 600))
                                 )),
                        
                        tabPanel("Property Value", fluid = T, icon = icon("calculator"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("propdtir", height = 600))
                                 )),
                        
                        tabPanel("Income", fluid = T, icon = icon("calculator"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("inc", height = 600))
                        
                        
@@ -118,7 +123,8 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
                        
                        tabPanel("Income & Property Value", fluid = T, icon = icon("calculator"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("prpinc", height = 600))
                        
                        
@@ -129,33 +135,38 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
            tabsetPanel(type="tab",
                        tabPanel("DTIR (CLoser Look)",fluid = T, icon = icon("receipt"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("dtir", height = 600))
                                   
                                   
                                 )),
                        tabPanel("Credit Score",fluid = T, icon = icon("receipt"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("bargender", height = 600)),
                                
 
                                 )),
                        tabPanel("Credit Score (more)", fluid = T, icon = icon("receipt"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("credensity", heigh = 600))
                                 )),
                        tabPanel("Open Credit", fluid = T, icon = icon("receipt"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("opencredit", heigh = 600))
                                 )),
                        
                        
                        tabPanel("Open Credit & Gender", fluid = T, icon = icon("receipt"),
                                 sidebarLayout(
-                                  sidebarPanel(),
+                                  sidebarPanel(width=3,
+                                               img(src="image.png",height = 500, width = 310)),
                                   mainPanel(plotOutput("opgender", heigh = 600))
                                 ))
            
@@ -165,10 +176,18 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
   
   
   
-  tabPanel("Forecast"),
+  tabPanel("Forecast",
+           tabsetPanel(type="tab",
+                       tabPanel("Logist Regression Evaluator (ROC)",fluid = T, icon = icon("receipt"),
+                                sidebarLayout(
+                                  sidebarPanel(tableOutput("ROC")),
+                                  mainPanel(plotOutput("varimport", height = 600)),
+                                         
+                                )))),
+             
   
   navbarMenu("More",
-             tabPanel("Contact Us", icon = icon("phone")),
+             tabPanel("Contact Us", icon = icon("phone"),uiOutput("tab")),
              tabPanel("Learn More", icon = icon("info")),
              tabPanel("Outlook", icon = icon("plus")),
              tabPanel("Help", icon = icon("question"))),
