@@ -481,40 +481,94 @@ AT SOME POINT THESE WILL BE DROPPED
     'LTV'
     'dtir1'
 
+
+
+
 ```{r}
-# The Following columns contain NA's for 'Status 1', therefore will need to be dropped
-# as to not to interfere with our model.
 
+library(ISLR)
+data("Default")
 
-loan2 <- subset(loan2, select = -c(rate_of_interest, Interest_rate_spread, Upfront_charges, income, property_value, LTV, dtir1))
-cor(loan2[sapply(loan2,is.numeric)])
-
-str(loan)
+head(Default)
 ```
 
 
 
 
-
-
-
-SOME MODEL
+Regression Model
 ```{r}
-
-logicalmodel <- glm(loan2$Status~ loan2$Credit_Score, family = "binomial")
-featurePlot(logicalmodel)
-
-summary(logicalmodel)
-ggplot()+geom_boxplot(aes(x = loan2$Credit_Score, y = loan2$Status))+?scale_fill_continuous()
-View(loan2)
-
-featurePlot(loan2[29,-31],y = loan2$Status,plot='pairs')
+#Splitting the data based on 70a%/30% train/test ratio.
 
 
-loan2_no_na <- drop_na(loan2) #dropped all na values (bad --> all status column becomes 0)
-summary(loan2_no_na)
+#Dropping NA's to conduct training/test
 
-cor(loan2_no_na[sapply(loan2_no_na,is.numeric)]) #checking Correlation between numeric variables. 
+
+loan_class <- (loan) #98187 obs. of  32 variables:
+loan_class <- subset(loan_class,select = -c(rate_of_interest,
+    Interest_rate_spread,
+    Upfront_charges,
+    income,
+    property_value,
+    LTV,
+    dtir1
+))
+
+summary(loan_class)
+
+train_test <- createDataPartition(loan_class$Status, p = 0.70, list = F)
+train <- loan_class[train_test,] #70% of data (104,000 observations x 32 variables)
+test <- loan_class[-train_test,]#30% of data (44,600 observations x 32 variables)
+nrow(train)
+nrow(test)
+
+summary(loan_class)
+
+
+
+
+logistic_model <- train(
+  form = Status ~ .,
+  data = train,
+  trControl = trainControl(method = "cv", number = 5),#Summary of sample sizes: 80618, 80618, 80618, 80619, 80619 
+  method = "glm",
+  family = "binomial",
+  na.action=na.exclude
+)
+
+logistic_model 
+logistic_model$finalModel
+logistic_model$results
+logistic_model$levels
+
+dev.new(width=5, height=20)
+
+
+variable_imp <- varImp(logistic_model,scale = F)
+plot(variable_imp, main="Variable Importance", top = 20)
+
+plot(logistic_model, main="Model Accuracies with MARS")
+
+
+filterVarImp(x = train[, -ncol(train)], y = train$Status)
+head(roc_imp)#The area under the ROC curve is computed for each class.
+
+
+
+
+
+
+
+summary(test$Status)
+head(pred)
+pred2 <- ifelse(pred>0.5,1,0)
+pred2
+tab2 <- table(Predicted = pred2,Actual = test$Status)
+  tab2
+pred <- predict(logistic_model,test)
+pred
+length(test$Status)
+length(pred)
+confusionMatrix(test$Status,pred)
 ```
 
 

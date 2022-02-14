@@ -80,10 +80,9 @@ ui <-navbarPage("That's BaLOANy INC.", collapsible = T, inverse = T, theme =bs_t
                        tabPanel("Missing Data", icon = icon("exclamation"),
                                 sidebarLayout(
                                   sidebarPanel(tableOutput("missing")),
-                                  mainPanel(plotOutput("vismissing", height = "600px")))),
+                                  mainPanel(plotOutput("vismissing", height = "600px")))))),
 
-                       tabPanel("Missing Data Visualized",icon = icon("images")))),
-  
+                  
                        
   tabPanel("Features",
            tabsetPanel(type = "tab",
